@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 def service_view(request):
     data = {
-        'name': 'jason',
-        'age': 21
+        'title': 'jason',
+        'description': 21
     }
     return JsonResponse(data)
