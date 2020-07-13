@@ -1,19 +1,107 @@
 openapi: 3.0.0
 info:
+  description: |
+    This is the api for service aggregation server.
   title: service
   version: '1.0'
+  contact:
+    email: jason@finventures.ca
 servers:
-  - url: 'https://finvault-api.herokuapp.com/'
+  - url: 'https://finvault-api.herokuapp.com'
+tags:
+  - name: service
+    description: Every aggregation service present by FinVault
+  - name: app
+    description: Every fin-app provided by FinVault
+  - name: user
+    description: Operations about user
+  - name: forum
+    description: Forum api
 paths:
   /service:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Service GET endpoint
+      tags:
+        - service
       responses:
         '200':
-          description: OK
-        '500':
-          description: Internal Server Error
+          description: Successfully return all services
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+        '400':
+          description: Bad Request
       operationId: get-service
+      description: return the full list of service
+      parameters: []
+  /getCurrentService:
+    get:
+      summary: Current GET endpoint
+      tags:
+        - service
+      responses:
+        '200':
+          description: Successfully return a list of service that the current user has
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+        '400':
+          description: Bad Request
+      operationId: get-getCurrentService
+      description: return a list of service that the current user has
+  /getAvailableService:
+    get:
+      summary: "Current user's available service GET endpoint"
+      description: get back a list of available service for current user
+      tags:
+        - service
+      responses:
+        '200':
+          description: Successfully returns a list of all available service for the current user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+              examples:
+                budget saver:
+                  value:
+                    id: 1
+                    title: budget saver
+                    description: An app that helps save budget
+                    status: available
+        '400':
+          description: Bad Request
+      operationId: get-getAvailableService
 components:
-  schemas: {}
+  schemas:
+    Service:
+      title: Service
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+            - available
+            - pending
+            - added
+    User:
+      title: User
+      type: object
+      properties:
+        id:
+          type: string
